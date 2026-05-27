@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fantasyland, Population 1 — jamsounds</title>
+  <meta name="description" content="Fantasyland, Population 1 — a 8-song album by jamsounds. Stream and download free." />
+  <link rel="canonical" href="https://jamplays.netlify.app/fantasyland-population-1/" />
+
+  <!-- Open Graph / social previews -->
+  <meta property="og:type" content="music.album" />
+  <meta property="og:site_name" content="JamPlays" />
+  <meta property="og:title" content="Fantasyland, Population 1 — jamsounds" />
+  <meta property="og:description" content="A 8-song album by jamsounds. Stream and download free." />
+  <meta property="og:url" content="https://jamplays.netlify.app/fantasyland-population-1/" />
+  <meta property="og:image" content="https://jamplays.netlify.app/fantasyland-population-1/cover.png" />
+  <meta property="og:image:secure_url" content="https://jamplays.netlify.app/fantasyland-population-1/cover.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1400" />
+  <meta property="og:image:height" content="1400" />
+  <meta property="og:image:alt" content="Fantasyland, Population 1 — album cover (weeping willow over the Seine)" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Fantasyland, Population 1 — jamsounds" />
+  <meta name="twitter:description" content="A 8-song album by jamsounds. Stream and download free." />
+  <meta name="twitter:image" content="https://jamplays.netlify.app/fantasyland-population-1/cover.png" />
+
+  <link rel="icon" type="image/png" href="cover.png" />
+
+  <style>
+    :root {
+      --paper: #f0e6d2;
+      --paper-deep: #e6daba;
+      --ink: #2a1f12;
+      --ink-soft: #4a3a23;
+      --gold: #8b6f3f;
+      --gold-deep: #6b4f2a;
+      --rule: rgba(107, 79, 42, 0.35);
+      --rule-soft: rgba(107, 79, 42, 0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Georgia, 'Times New Roman', Garamond, serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Paper texture overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 18% 22%, rgba(0,0,0,0.045) 0%, transparent 45%),
+        radial-gradient(circle at 82% 78%, rgba(0,0,0,0.05) 0%, transparent 50%),
+        radial-gradient(circle at 70% 15%, rgba(255,255,255,0.06) 0%, transparent 35%);
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 28px 140px;
+    }
+
+    /* HEADER */
+    .pre-title {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-align: center;
+      color: var(--gold-deep);
+      margin-bottom: 8px;
+    }
+    .pre-title a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .pre-title a:hover { border-bottom-color: var(--gold-deep); }
+    .rule {
+      width: 60px;
+      height: 1px;
+      background: var(--gold-deep);
+      margin: 0 auto 22px;
+    }
+    h1.album-title {
+      font-size: clamp(34px, 6vw, 52px);
+      font-weight: 400;
+      font-style: italic;
+      text-align: center;
+      letter-spacing: 0.5px;
+      line-height: 1.05;
+      margin-bottom: 28px;
+    }
+
+    /* COVER */
+    .cover-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .cover {
+      display: block;
+      width: min(380px, 75vw);
+      height: auto;
+      border: 10px solid var(--paper);
+      box-shadow:
+        0 0 0 1px var(--gold-deep),
+        0 8px 24px rgba(42, 31, 18, 0.18);
+      background: var(--paper-deep);
+      transition: opacity 0.35s ease;
+    }
+    .cover.swapping { opacity: 0; }
+
+    /* CTA BUTTONS */
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+      padding: 11px 24px;
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 15px;
+      cursor: pointer;
+      border-radius: 0;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover { background: var(--ink-soft); }
+    .btn.ghost {
+      background: transparent;
+      color: var(--ink);
+    }
+    .btn.ghost:hover { background: var(--ink); color: var(--paper); }
+    .btn .ic { font-style: normal; }
+
+    /* TRACKLIST */
+    .tracklist {
+      max-width: 520px;
+      margin: 0 auto 48px;
+    }
+    .tracklist-header {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-align: center;
+      color: var(--gold-deep);
+      margin-bottom: 12px;
+    }
+    .track {
+      display: grid;
+      grid-template-columns: 32px 1fr auto auto;
+      gap: 14px;
+      align-items: center;
+      padding: 10px 4px;
+      border-bottom: 1px dotted var(--rule);
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 16px;
+    }
+    .track:first-of-type { border-top: 1px dotted var(--rule); }
+    .track:hover { background: rgba(107, 79, 42, 0.08); }
+    .track.playing { background: rgba(107, 79, 42, 0.14); }
+
+    .track-num {
+      font-style: italic;
+      color: var(--gold-deep);
+      font-size: 14px;
+    }
+    .track.playing .track-num::before {
+      content: "▶ ";
+      font-style: normal;
+      color: var(--ink);
+    }
+    .track-title { color: var(--ink); }
+    .track-duration {
+      color: var(--gold-deep);
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      min-width: 42px;
+      text-align: right;
+    }
+    .track-download {
+      color: var(--gold-deep);
+      text-decoration: none;
+      font-size: 16px;
+      padding: 4px 6px;
+      border-radius: 2px;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+    .track-download:hover {
+      color: var(--ink);
+      background: rgba(107, 79, 42, 0.15);
+    }
+
+    /* LYRICS */
+    /* NOW PLAYING — contextual lyrics panel */
+    .now-playing {
+      max-width: 560px;
+      margin: 0 auto 40px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.4s ease, max-height 0.5s ease;
+    }
+    .now-playing.visible {
+      opacity: 1;
+      max-height: 8000px;
+    }
+    .np-header {
+      text-align: center;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px dotted var(--rule);
+    }
+    .np-eyebrow {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--gold-deep);
+      margin-bottom: 6px;
+    }
+    .np-title {
+      font-size: 22px;
+      font-style: italic;
+      color: var(--ink);
+    }
+    .np-title .num {
+      color: var(--gold-deep);
+      font-size: 16px;
+      margin-right: 6px;
+    }
+    .np-body {
+      white-space: pre-line;
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--ink-soft);
+      text-align: center;
+    }
+    .np-body.empty {
+      font-style: italic;
+      color: var(--gold-deep);
+      opacity: 0.8;
+    }
+
+    /* ABOUT / FOOTER */
+    .about {
+      max-width: 520px;
+      margin: 48px auto 0;
+      text-align: center;
+      font-size: 14px;
+      color: var(--ink-soft);
+      font-style: italic;
+      line-height: 1.8;
+    }
+    .about p + p { margin-top: 14px; }
+    .footer-rule {
+      width: 40px;
+      height: 1px;
+      background: var(--gold-deep);
+      margin: 36px auto 24px;
+    }
+    .credits {
+      text-align: center;
+      font-size: 12px;
+      color: var(--gold-deep);
+      letter-spacing: 2px;
+    }
+    .credits a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .credits a:hover { border-bottom-color: var(--gold-deep); }
+
+    /* STICKY MINI PLAYER */
+    .miniplayer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px 24px;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      z-index: 100;
+      border-top: 1px solid var(--gold-deep);
+      font-family: Georgia, serif;
+    }
+    .miniplayer.visible { display: flex; }
+    .mp-art {
+      width: 44px;
+      height: 44px;
+      background-image: url('cover.png');
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+    .mp-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .mp-title {
+      font-size: 14px;
+      font-style: italic;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mp-album {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: rgba(240, 230, 210, 0.55);
+      margin-top: 2px;
+    }
+    .mp-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mp-btn {
+      background: transparent;
+      border: 1px solid rgba(240, 230, 210, 0.3);
+      color: var(--paper);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      padding: 0;
+    }
+    .mp-btn:hover { border-color: var(--paper); }
+    .mp-btn.play { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+    .mp-progress-wrap {
+      flex: 2;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      color: rgba(240, 230, 210, 0.7);
+    }
+    .mp-progress {
+      flex: 1;
+      height: 3px;
+      background: rgba(240, 230, 210, 0.2);
+      cursor: pointer;
+      position: relative;
+    }
+    .mp-progress-fill {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: var(--paper);
+      width: 0%;
+    }
+
+    @media (max-width: 640px) {
+      .page { padding: 36px 18px 140px; }
+      .miniplayer { padding: 10px 14px; gap: 10px; }
+      .mp-progress-wrap { display: none; }
+      .mp-art { width: 38px; height: 38px; }
+      .mp-title { font-size: 13px; }
+      .actions { gap: 8px; }
+      .btn { padding: 10px 18px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <p class="pre-title">A <a href="https://jamsounds.netlify.app" target="_blank" rel="noopener">JAMSOUNDS</a> RECORDING</p>
+    <div class="rule"></div>
+    <h1 class="album-title">Fantasyland,<br />Population 1</h1>
+
+    <div class="cover-wrap">
+      <img class="cover" id="coverImg" src="cover.png" data-default="cover.png" alt="Fantasyland, Population 1 — album cover" />
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="playAllBtn"><span class="ic">▶</span> Play album</button>
+      <a class="btn ghost" href="Fantasyland-Population-1.zip" download><span class="ic">↓</span> Download album</a>
+    </div>
+
+    <div class="now-playing" id="nowPlaying">
+      <div class="np-header">
+        <p class="np-eyebrow">NOW PLAYING</p>
+        <p class="np-title" id="npTitle"></p>
+      </div>
+      <div class="np-body" id="npBody"></div>
+    </div>
+
+    <div class="tracklist" id="tracklist">
+      <p class="tracklist-header">TRACKLIST</p>
+      <!-- tracks rendered by JS -->
+    </div>
+
+    <div class="about">
+      <p>Recorded 2026.</p>
+      <p>A weeping willow on the Seine.</p>
+    </div>
+
+    <div class="footer-rule"></div>
+    <p class="credits">JAMPLAYS &middot; <a href="https://jamsounds.netlify.app" target="_blank" rel="noopener">JAMSOUNDS</a></p>
+  </div>
+
+  <!-- STICKY MINI PLAYER -->
+  <div class="miniplayer" id="miniplayer">
+    <div class="mp-art"></div>
+    <div class="mp-info">
+      <div class="mp-title" id="mpTitle">—</div>
+      <div class="mp-album">Fantasyland, Population 1</div>
+    </div>
+    <div class="mp-controls">
+      <button class="mp-btn" id="mpPrev" title="Previous">⏮</button>
+      <button class="mp-btn play" id="mpPlay" title="Play/Pause">▶</button>
+      <button class="mp-btn" id="mpNext" title="Next">⏭</button>
+    </div>
+    <div class="mp-progress-wrap">
+      <span id="mpCurrent">0:00</span>
+      <div class="mp-progress" id="mpProgress">
+        <div class="mp-progress-fill" id="mpProgressFill"></div>
+      </div>
+      <span id="mpDuration">0:00</span>
+    </div>
+  </div>
+
+  <audio id="audio" preload="metadata"></audio>
+
+  <script>
+    // ============================================================
+    // TRACKLIST — edit titles/files here
+    // ============================================================
+    const TRACKS = [
+      { n: 'i',    title: 'Seen and Alive',          file: 'audio/01-seen-and-alive.mp3',         art: 'song-art/01-seen-and-alive.png' },
+      { n: 'ii',   title: 'Midnight Your Time',      file: 'audio/02-midnight-your-time.mp3',     art: 'song-art/02-midnight-your-time.png' },
+      { n: 'iii',  title: 'Tu me Manques',           file: 'audio/03-tu-me-manques.mp3',          art: 'song-art/03-tu-me-manques.png' },
+      { n: 'iv',   title: "It's Not The First Time", file: 'audio/04-its-not-the-first-time.mp3', art: 'song-art/04-its-not-the-first-time.png' },
+      { n: 'v',    title: 'All the Senses',          file: 'audio/05-all-the-senses.mp3',         art: 'song-art/05-all-the-senses.png' },
+      { n: 'vi',   title: '215 Days (duet)',         file: 'audio/06-215-days.mp3',               art: 'song-art/06-215-days.png' },
+      { n: 'vii',  title: 'Me and Bobby Megi',       file: 'audio/07-me-and-bobby-megi.mp3',      art: 'song-art/07-me-and-bobby-megi.png' },
+      { n: 'viii', title: 'Cuddle Me (duet)',        file: 'audio/08-cuddle-me.mp3',              art: 'song-art/08-cuddle-me.png' }
+    ];
+
+    // ============================================================
+    // LYRICS — populated from Bandcamp_Lyrics_All_Songs.md
+    // ============================================================
+    const LYRICS = {
+      'Seen and Alive': `I was a bit intimidated
+You were graceful and light
+I'm a big bumbling American
+I don't know an ounce of French
+And I hadn't been with a woman in a long time
+When all of a sudden
+I found myself on a romantic date
+With a beautiful Albanian woman in Paris
+And my mind was a bit blown
+
+We went to the second bar
+Where you had your Diplomático
+You pulled a chair close to yours
+Said I could sit over there
+And we started touching hands
+And I was very excited
+To touch you that first night
+
+You gave me a wonderful night
+You made me feel seen and alive
+And I wouldn't change anything
+Wouldn't change a single thing
+You made me feel seen
+You made me feel alive
+
+We had that first night by the Seine
+A weeping willow leaning over us
+And I haven't been that excited
+By not kissing someone
+Since I was a teenager
+I felt invigorated
+Despite how tired I was the next day
+When I left for London
+
+I really had a fantastic night
+I enjoyed hearing about everything about you
+I'm sure I've already forgotten
+And I'll have to ask you about again
+Thanks for your touch
+
+I came back from London
+And the two nights in my hotel room
+Are etched in my brain
+I really loved sleeping next to you
+I'm not an excellent sleeper
+Especially when other people are around
+But I was very comfortable with you
+
+I made it to the airport
+I miss you already
+I should have missed the flight
+I should have missed you less
+And kissed you more
+Ju falënderoj
+For your time
+
+Seen and alive
+Seen and alive`,
+
+      'Midnight Your Time': `October, Paris, a table for two
+I didn't know what I was walking into
+A weeping willow leaning over the Seine
+And I never really walked back home again
+
+You said seven-thirty at the Caveau de l'Isle
+I came around the corner and I forgot how to smile
+You were graceful and light and I was a wreck
+A big bumbling American just trying to catch his breath
+You let me sit closer, you let me hold your hand
+And the whole damn city dissolved like sand
+I'm not one to fall, but I fell anyway
+Me and Bobby Megi — what a hell of a way
+
+I should've missed that flight
+I should've stayed another night
+Tu me manques — those words don't even
+start to say what I mean
+
+Five thousand miles, and I miss you already
+Five thousand miles, and my hands won't go steady
+I'd kiss you from midnight your time to mine
+Je dashuria e jetës sime
+
+You drew a line in November, the twenty-second day
+Said the end is the end, there is no other way
+But I've never been one to let go of a thing
+If I want it bad enough I'll learn how to sing
+I looked up at the moon over Dallas one night
+Saw the willow, the river, the lamps and the light
+Heard your voice in the kitchen when no one was there
+You were a world away — but you were everywhere
+
+New Year's came in cold with no kiss to keep
+I held my breath like a man going under deep
+You said you couldn't — I said, I'll wait
+I said, twenty-twenty-six, the beginning of something great
+It's a fool that looks for logic in the chambers of the heart
+I love your laugh and I love your name
+But I love your soul — and I'll never be the same
+
+Two hundred and fifteen days, and I'm back on a plane
+I'm coming home to you, I'm coming home again
+Jesus, what a beautiful street, what a beautiful sky
+Your hotel, my hotel — your lips, my eyes
+
+Next time you tell me you're coming
+Whisper it right in my ear
+Whisper it slow
+Whisper it clear
+
+Five thousand miles, and I'm not missing you now
+Five thousand miles, and I figured it out
+I'll kiss you from midnight your time to mine
+Je dashuria e jetës sime
+Five thousand miles — and I'm not missing you now
+
+A weeping willow leaning over the Seine
+And I never really walked back home again
+Ma cherie — I never really walked back home again`,
+
+      'Tu me Manques': `I want to trace every inch of your body
+With my eyes, and then my fingers
+I hang onto your every word
+You are missing to me
+
+I haven't gone one hour without thinking
+Since I left Paris, save for when I'm sleeping
+You've infected your way there, too
+I love you
+
+Megi, I can feel you from here
+Thousands of miles, I miss you less and kiss you more
+I want to hold your hand in the street
+To stop because you looked beautiful
+And I forgot how to walk
+
+I want to know your moods, your sweet ones
+Your difficult ones, your quiet ones
+When to hold you, when to say I'm here
+I yearn for you
+
+Send your long message, get my heart racing
+My eyes fill with tears at the thought
+Of not talking to you anymore
+I love you
+
+I'd trace the outline of your naked body
+Slow, soft, deep, sleepy
+I want to break down walls with you together
+I want unguarded Megi in my life
+
+I want to kiss you with everyone around
+And no one around, I want you
+
+Tu me manques, you are missing to me
+I feel I lived a lifetime with you
+You opened my heart again
+I love you`,
+
+      "It's Not The First Time": `Without sounding too "woe is me"
+People frequently choose to leave me
+My dad when I was four
+My mom when I was seventeen
+My best friend, my brother
+My ex-fiancée
+I feel like I'm a good person
+I feel like I could be a good partner
+I know I have a number of flaws
+But I know I am also valuable
+
+And it's not the first time
+Someone hasn't chosen me
+It's not the first time
+Someone hasn't chosen me
+
+I won't tell you how much I miss you
+Because I want you to think I've been fine
+Not talking to you the last two weeks
+If it weren't for our agreed-upon dissolution
+I'd still be writing to you every day
+Wanting to find out more about you
+I miss finding out about you
+
+You should have told me the truth
+A month and a half ago
+You said don't worry about it
+Everything will be fine
+Well, it's not fine
+You lied to me
+You have been selfish
+This hasn't been fair
+And I'd rather remember me loving you
+Than being mad at you for not loving me
+
+I lost you without really ever having you
+I'm an unhappy, grumpy fucker
+With tears in my eyes because I miss you
+Words aren't adequate for how I yearn for you
+I shouldn't have let it get this far
+I knew how stupid and unrealistic
+This whole thing was from the get-go
+But I love you
+I want to love you forever
+I want to move to Europe and marry you
+And build an entire world with you
+Forever
+
+I'm appreciative of every time
+The check marks turn blue
+I'm hearing songs differently
+While I think about you
+
+Hello Megi
+I hope you're doing well
+It has been a struggle
+Not to message you
+Be well`,
+
+      'All the Senses': `I'd light a candle or two
+Put on some music
+Just to set the mood
+I'd pull you close to me
+Look into your eyes
+Tell you how much I've missed you
+And then I'd kiss you
+
+First, slow
+Just lightly
+I'd kiss your lips
+And your cheeks
+And your chin
+And your nose
+And your forehead and your eyes
+Then I'd kiss your lips again
+Long this time
+Deep
+
+Lights off and lights on
+I want all the senses
+I want to see you
+And feel you
+And hear you
+And smell you
+And taste you
+All the senses
+In different ways
+I want them all
+
+Touch is important to me
+If I'm not trying to touch you
+Something's off with me
+I'll always want to be touching you
+If I can
+I yearn for your hands
+I'd kiss the top of your head
+Hold you tight to me
+Kiss your forehead
+Always kissing
+Please and thank you
+
+I want to be vulnerable with you
+And you with me
+I want you to trust me
+And guide me
+I love who you are
+I love your soul
+And I want to know it fully
+And we didn't have sex
+But I still felt
+Like I made love to you
+
+I'd lay on my back
+Your cheek on my chest
+Your hair a little in my face
+Not the annoying kind
+But the blissfully content kind
+I'd rub your back gently
+Kiss the top of your head
+Tell you how great that was
+And I love you
+And I love you
+
+Slow
+Soft
+Deep
+Sleepy
+A slow, soft, deep, sleepy kiss
+Always kissing
+Please and thank you
+Always kissing
+Please and thank you`,
+
+      '215 Days (duet)': `Hi. I'm at the airport.
+Thinking about seeing you.
+On my plane to Paris.
+I'll see you soon.
+
+I close my eyes and I can picture you
+But it's not the same — I have to touch you
+I obsess over blue checkmarks on a screen
+'Cause I need to know what you're going to say next
+I want to walk through Paris with you
+Get lost, pretend I know where I'm going
+Let you correct me
+Hold your hand in the street
+
+I think about you when I wake up
+When I try to sleep
+When I'm asleep
+I think about you all the time
+
+Two hundred and fifteen days, and I still need you
+Two hundred and fifteen days, and I'm losing my mind
+If love were a choice, I'd choose you
+A thousand times over
+A thousand times over
+A thousand times
+
+Welcome back this side of the ocean
+I'm impatiently waiting for one more day to pass
+I'd really love to be wrapped up in your arms right now
+I'll be on fire near you
+I'm looking towards the future
+'Cause that's where you are
+I'll smile at you, hug you
+Hold you around your waist
+
+I want to memorize you
+Your sweet ones, your difficult ones
+Your quiet ones
+I want to break down walls
+Or climb them, leave them up — just let me in
+I'm looking forward to absolutely melting into your arms
+It will feel so scary, but so good
+So, so good
+
+Two hundred and fifteen days, and now I see you
+Two hundred and fifteen days, and I'm out of my mind
+If love were a choice, I'd choose you
+A thousand times over
+A thousand times over
+A thousand times
+
+I love you
+I miss you
+I want you
+Me too
+I close my eyes
+And this time — I get to touch you
+Të dua`,
+
+      'Me and Bobby Megi': `Bought a ticket to Charles de Gaulle on a Sunday afternoon
+Spent the whole damn winter counting down to June
+Big bumbling American in a too-small hotel
+Room fifty-two, full-size bed, doing pretty well
+Walked the city for an hour just to find my feet
+Then I texted you — Jesus, what a beautiful street
+You came around the corner like the answer to a prayer
+Said next time you're coming, whisper it in my ear
+
+Me and Bobby Megi got three weeks in Paris
+Me and Bobby Megi, ain't no one gonna scare us
+Vegan Qofte sitting pretty by the Seine
+And I ain't saying goodbye to her again
+Me and Bobby Megi got three weeks in Paris
+
+Pizzeria Positano, pasta and a Peroni
+Artichoke on the side, you laughing at my phony
+French accent — I been butchering it for weeks
+Tu es belle is just about the only thing I speak
+L'escale on the corner where I first laid eyes
+Down by Pont Marie where the moon don't lie
+Weeping willow tree where it nearly began
+And I'd kiss you here a thousand times again
+
+You can call me old, you can call me slow
+You can bless my heart, baby, I'll take the blow
+Margaret Thatcher naked on a cold winter day
+Is the only damn thing keeping me halfway
+A sack of flaws wrapped in two-twenty of pure
+You can sue me for breach, send your lawyers to my door
+I'll just kiss you again
+I'll just kiss you again
+
+We got pasta and pizza and a hundred miles of street
+Got the Marais in the morning, got the Tuileries at three
+Got the Albanian eagle, got the French goodbye
+Got Sammy at the bar asking if I'll stop by
+Got the moon and the stars and a full-size bed
+Got your hand in my hand and I'm out of my head
+Three more weeks to get every minute right
+And I'll figure out the rest — but I ain't leaving tonight
+
+Je dashuria e jetës sime
+Three weeks in Paris and we're just getting free
+Je dashuria e jetës sime
+Me and Bobby Megi`
+    };
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    const audio = document.getElementById('audio');
+    const tracklistEl = document.getElementById('tracklist');
+    const miniplayer = document.getElementById('miniplayer');
+    const mpTitle = document.getElementById('mpTitle');
+    const mpPlay = document.getElementById('mpPlay');
+    const mpPrev = document.getElementById('mpPrev');
+    const mpNext = document.getElementById('mpNext');
+    const mpCurrent = document.getElementById('mpCurrent');
+    const mpDuration = document.getElementById('mpDuration');
+    const mpProgress = document.getElementById('mpProgress');
+    const mpProgressFill = document.getElementById('mpProgressFill');
+    const playAllBtn = document.getElementById('playAllBtn');
+    const coverImg = document.getElementById('coverImg');
+    const mpArt = document.querySelector('.mp-art');
+    const DEFAULT_COVER = coverImg.dataset.default;
+    const nowPlaying = document.getElementById('nowPlaying');
+    const npTitle = document.getElementById('npTitle');
+    const npBody = document.getElementById('npBody');
+
+    let currentIndex = -1;
+    let trackDurations = new Array(TRACKS.length).fill(null);
+
+    function fmtTime(s) {
+      if (!isFinite(s) || s == null) return '0:00';
+      const m = Math.floor(s / 60);
+      const ss = Math.floor(s % 60).toString().padStart(2, '0');
+      return m + ':' + ss;
+    }
+
+    // ============================================================
+    // RENDER TRACKLIST
+    // ============================================================
+    function renderTracklist() {
+      TRACKS.forEach((t, i) => {
+        const row = document.createElement('div');
+        row.className = 'track';
+        row.dataset.index = i;
+        row.innerHTML = `
+          <span class="track-num">${t.n}.</span>
+          <span class="track-title">${t.title}</span>
+          <span class="track-duration" data-dur="${i}">—:—</span>
+          <a class="track-download" href="${t.file}" download title="Download MP3" onclick="event.stopPropagation()">↓</a>
+        `;
+        row.addEventListener('click', () => playIndex(i, true));
+        tracklistEl.appendChild(row);
+      });
+    }
+
+    // ============================================================
+    // PRE-LOAD DURATIONS for the tracklist
+    // ============================================================
+    function preloadDurations() {
+      TRACKS.forEach((t, i) => {
+        const probe = new Audio();
+        probe.preload = 'metadata';
+        probe.src = t.file;
+        probe.addEventListener('loadedmetadata', () => {
+          trackDurations[i] = probe.duration;
+          const el = document.querySelector(`[data-dur="${i}"]`);
+          if (el) el.textContent = fmtTime(probe.duration);
+        });
+      });
+    }
+
+    // ============================================================
+    // PLAYBACK
+    // ============================================================
+    function swapCoverTo(src) {
+      if (coverImg.src.endsWith(src)) return;
+      // Preload then crossfade
+      const preload = new Image();
+      preload.onload = () => {
+        coverImg.classList.add('swapping');
+        setTimeout(() => {
+          coverImg.src = src;
+          coverImg.classList.remove('swapping');
+        }, 180);
+      };
+      preload.src = src;
+    }
+
+    function playIndex(i, autoplay) {
+      if (i < 0 || i >= TRACKS.length) return;
+      const wasPlayingSame = (i === currentIndex && !audio.paused);
+      if (wasPlayingSame) {
+        audio.pause();
+        return;
+      }
+      if (i === currentIndex) {
+        audio.play();
+        return;
+      }
+      currentIndex = i;
+      audio.src = TRACKS[i].file;
+      mpTitle.textContent = TRACKS[i].title;
+      miniplayer.classList.add('visible');
+      // Swap main cover + mini-player art to this song's art
+      swapCoverTo(TRACKS[i].art);
+      mpArt.style.backgroundImage = `url('${TRACKS[i].art}')`;
+      // Show this song's lyrics inline
+      showNowPlayingLyrics(i);
+      updateRowHighlight();
+      if (autoplay !== false) audio.play().catch(() => {});
+    }
+
+    function showNowPlayingLyrics(i) {
+      const t = TRACKS[i];
+      const lyric = LYRICS[t.title];
+      npTitle.innerHTML = `<span class="num">${t.n}.</span>${t.title}`;
+      if (lyric) {
+        npBody.classList.remove('empty');
+        npBody.textContent = lyric;
+      } else {
+        npBody.classList.add('empty');
+        npBody.textContent = '(lyrics coming soon)';
+      }
+      nowPlaying.classList.add('visible');
+    }
+
+    function updateRowHighlight() {
+      document.querySelectorAll('.track').forEach((row, i) => {
+        row.classList.toggle('playing', i === currentIndex && !audio.paused);
+      });
+    }
+
+    audio.addEventListener('play',  updateRowHighlight);
+    audio.addEventListener('pause', updateRowHighlight);
+    audio.addEventListener('play',  () => { mpPlay.textContent = '⏸'; });
+    audio.addEventListener('pause', () => { mpPlay.textContent = '▶'; });
+    audio.addEventListener('ended', () => {
+      if (currentIndex < TRACKS.length - 1) playIndex(currentIndex + 1, true);
+      else { mpPlay.textContent = '▶'; updateRowHighlight(); }
+    });
+    audio.addEventListener('loadedmetadata', () => {
+      mpDuration.textContent = fmtTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', () => {
+      mpCurrent.textContent = fmtTime(audio.currentTime);
+      if (audio.duration) {
+        mpProgressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+      }
+    });
+
+    mpPlay.addEventListener('click', () => {
+      if (currentIndex === -1) playIndex(0, true);
+      else if (audio.paused) audio.play();
+      else audio.pause();
+    });
+    mpPrev.addEventListener('click', () => {
+      // If more than ~2 seconds into the current song, restart it.
+      // Otherwise (already at/near the beginning), jump to the previous track.
+      if (audio.currentTime > 2) {
+        audio.currentTime = 0;
+      } else if (currentIndex > 0) {
+        playIndex(currentIndex - 1, true);
+      } else {
+        audio.currentTime = 0;
+      }
+    });
+    mpNext.addEventListener('click', () => {
+      if (currentIndex < TRACKS.length - 1) playIndex(currentIndex + 1, true);
+    });
+    mpProgress.addEventListener('click', (e) => {
+      if (!audio.duration) return;
+      const rect = mpProgress.getBoundingClientRect();
+      audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+    });
+    playAllBtn.addEventListener('click', () => playIndex(0, true));
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    renderTracklist();
+    preloadDurations();
+  </script>
+</body>
+</html>

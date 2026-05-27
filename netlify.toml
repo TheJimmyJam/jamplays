@@ -1,0 +1,23 @@
+[build]
+  publish = "."
+
+# Cache album assets aggressively — they're content-stable
+[[headers]]
+  for = "/*/audio/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*/song-art/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*/cover.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*/*.zip"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
