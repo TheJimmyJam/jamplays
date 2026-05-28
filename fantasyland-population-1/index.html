@@ -261,6 +261,30 @@
       color: var(--gold-deep);
       opacity: 0.8;
     }
+    /* Anchored mode: lyrics render as per-line spans so we can highlight
+       the active line and scroll it to viewport center. */
+    .np-body.anchored {
+      white-space: normal;
+      padding: 18vh 0;
+    }
+    .np-body.anchored .lyric-line {
+      display: block;
+      color: rgba(74, 58, 35, 0.32);
+      transition: color 0.45s ease, transform 0.45s ease, letter-spacing 0.45s ease;
+      padding: 3px 6px;
+    }
+    .np-body.anchored .lyric-line.blank { height: 0.6em; }
+    .np-body.anchored .lyric-line.near   { color: var(--ink-soft); }
+    .np-body.anchored .lyric-line.active {
+      color: var(--ink);
+      transform: scale(1.04);
+      letter-spacing: 0.2px;
+      font-weight: 600;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .np-body.anchored .lyric-line { transition: none; }
+      .np-body.anchored .lyric-line.active { transform: none; }
+    }
 
     /* ABOUT / FOOTER */
     .about {
@@ -1104,6 +1128,76 @@ A thousand weeks from now
 The beginning of something great`
     };
 
+    // ANCHORS: optional per-song timestamp markers for synced lyric highlight.
+    // Each entry: [timeSec, firstLineIdx, lastLineIdxExclusive]
+    //   Lines [firstLineIdx, lastLineIdxExclusive) are evenly distributed
+    //   across the time window from this anchor to the next. Anchors can
+    //   revisit earlier line ranges (e.g. choruses sung 3x but only written
+    //   once in the LYRICS block above). Songs without an ANCHORS entry fall
+    //   back to a smooth continuous-drift scroll.
+    const ANCHORS = {
+      'Seen and Alive': [
+        [12,   0,  9],   // 0:12 intro:    "I was a bit intimidated" → lines 0-8
+        [44,  10, 17],   // 0:44 verse 1:  "We went to the second bar" → 10-16
+        [71,  18, 24],   // 1:11 chorus 1: "You gave me a wonderful night" → 18-23
+        [93,  25, 33],   // 1:33 verse 2:  "We had that first night by the Seine" → 25-32
+        [118, 34, 39],   // 1:58 verse 3:  "I really had a fantastic night" → 34-38
+        [138, 18, 24],   // 2:18 chorus 2: repeat of lines 18-23
+        [166, 40, 47],   // 2:46 verse 4:  "I came back from London" → 40-46
+        [197, 48, 55],   // 3:17 verse 5:  "I made it to the airport" → 48-54
+        [225, 18, 24],   // 3:45 chorus 3: repeat of lines 18-23
+        [252, 56, 58],   // 4:12 outro:    "Seen and alive" → 56-57
+      ],
+      'Midnight Your Time': [
+        [0,    0,  4],   // 0:00 intro:       "October, Paris, a table for two" → 0-3
+        [21,   5, 13],   // 0:21 verse 1:     "You said seven-thirty..." → 5-12
+        [57,  14, 18],   // 0:57 pre-chorus:  "I should've missed that flight" → 14-17
+        [70,  19, 23],   // 1:10 chorus 1:    "Five thousand miles..." → 19-22
+        [95,  24, 32],   // 1:35 verse 3:     "You drew a line in November..." → 24-31
+        [124, 14, 18],   // 2:04 pre-chorus 2: repeat lines 14-17
+        [137, 19, 23],   // 2:17 chorus 2:    repeat lines 19-22
+        [162, 33, 40],   // 2:42 verse 4:     "New Year's came in cold..." → 33-39
+        [191, 41, 45],   // 3:11 verse 5:     "Two hundred and fifteen days..." → 41-44
+        [207, 46, 50],   // 3:27 verse 6:     "Next time you tell me you're coming" → 46-49
+        [221, 51, 56],   // 3:41 final chorus: "Five thousand miles..." (variation) → 51-55
+        [252, 57, 58],   // 4:12 outro line 1: "A weeping willow leaning over the Seine"
+        [255, 58, 59],   // 4:15 outro line 2: "And I never really walked back home again"
+        [261, 59, 60],   // 4:21 outro line 3: "Ma cherie — I never really walked back home again"
+      ],
+      'Tu me Manques': [
+        [9,    0,  1],   // 0:09 "I want to trace every inch of your body"
+        [15,   1,  2],   // 0:15 "With my eyes, and then my fingers"
+        [21,   2,  3],   // 0:21 "I hang onto your every word"
+        [24,   3,  4],   // 0:24 "You are missing to me"
+        [31,   5,  6],   // 0:31 "I haven't gone one hour without thinking"
+        [36,   6,  7],   // 0:36 "Since I left Paris, save for when I'm sleeping"
+        [42,   7,  8],   // 0:42 "You've infected your way there, too"
+        [47,   8,  9],   // 0:47 "I love you"
+        [53,  10, 11],   // 0:53 chorus 1: "Megi, I can feel you from here"
+        [61,  11, 12],   // 1:01 "Thousands of miles, I miss you less and kiss you more"
+        [73,  12, 13],   // 1:13 "I want to hold your hand in the street"
+        [82,  13, 14],   // 1:22 "To stop because you looked beautiful"
+        [88,  14, 15],   // 1:28 "And I forgot how to walk"
+        [95,  16, 19],   // 1:35 "I want to know your moods..." (lines 16-18 over 10s)
+        [105, 19, 20],   // 1:45 "I yearn for you"
+        [111, 21, 23],   // 1:51 "Send your long message..." (lines 21-22 over 11s)
+        [122, 23, 24],   // 2:02 "Of not talking to you anymore"
+        [127, 24, 25],   // 2:07 "I love you"
+        [133, 10, 12],   // 2:13 chorus 2: lines 10-11 over 20s
+        [153, 12, 13],   // 2:33 "I want to hold your hand in the street"
+        [161, 13, 14],   // 2:41 "To stop because you looked beautiful"
+        [168, 14, 15],   // 2:48 "And I forgot how to walk"
+        [174, 26, 27],   // 2:54 "I'd trace the outline of your naked body"
+        [179, 27, 28],   // 2:59 "Slow, soft, deep, sleepy"
+        [184, 28, 29],   // 3:04 "I want to break down walls with you together"
+        [195, 10, 12],   // 3:15 chorus 3: lines 10-11 over 20s
+        [215, 31, 33],   // 3:35 "I want to kiss you with everyone around" (2 lines over 18s)
+        [233, 34, 35],   // 3:53 "Tu me manques, you are missing to me"
+        [240, 35, 37],   // 4:00 "I feel I lived a lifetime with you" (lines 35-36 over 11s)
+        [251, 37, 38],   // 4:11 "I love you" (final)
+      ],
+    };
+
     // ============================================================
     // STATE
     // ============================================================
@@ -1212,19 +1306,130 @@ The beginning of something great`
       if (autoplay !== false) audio.play().catch(() => {});
     }
 
+    // Per-track lyric state. currentAnchors is non-null when the song
+    // has timestamp markers — we then render each line as a span, highlight
+    // the active one, and scroll it to viewport center. Otherwise we fall
+    // back to a smooth continuous drift through the whole lyric block.
+    let currentAnchors    = null;
+    let lyricLineEls      = [];
+    let lastActiveLineIdx = -1;
+    let lyricScrollStartY = 0;
+    let lyricScrollEndY   = 0;
+    let lyricRangeReady   = false;
+    let userScrollPauseUntil = 0;
+
     function showNowPlayingLyrics(i) {
       const t = TRACKS[i];
       const lyric = LYRICS[t.title];
+      const anchors = (typeof ANCHORS !== 'undefined' && ANCHORS[t.title]) || null;
+
       npTitle.innerHTML = `<span class="num">${t.n}.</span>${t.title}`;
-      if (lyric) {
-        npBody.classList.remove('empty');
-        npBody.textContent = lyric;
-      } else {
+      npBody.classList.remove('empty', 'anchored');
+      npBody.innerHTML = '';
+      currentAnchors    = anchors;
+      lyricLineEls      = [];
+      lastActiveLineIdx = -1;
+      lyricRangeReady   = false;
+      userScrollPauseUntil = 0;
+
+      if (!lyric) {
         npBody.classList.add('empty');
         npBody.textContent = '(lyrics coming soon)';
+        nowPlaying.classList.add('visible');
+        return;
       }
+
+      if (anchors) {
+        npBody.classList.add('anchored');
+        lyric.split('\n').forEach(rawLine => {
+          const trimmed = rawLine.trim();
+          const el = document.createElement('span');
+          el.className = 'lyric-line' + (trimmed ? '' : ' blank');
+          el.textContent = trimmed || ' ';
+          npBody.appendChild(el);
+          lyricLineEls.push(el);
+        });
+      } else {
+        npBody.textContent = lyric;
+      }
+
       nowPlaying.classList.add('visible');
+      requestAnimationFrame(() => requestAnimationFrame(measureLyricScrollRange));
     }
+
+    // Continuous-drift scroll range (only used for songs without anchors).
+    function measureLyricScrollRange() {
+      lyricRangeReady = false;
+      if (!nowPlaying.classList.contains('visible') || npBody.classList.contains('empty')) return;
+      if (currentAnchors) return; // anchored mode handles its own scroll
+      const rect = npBody.getBoundingClientRect();
+      const blockTop    = window.scrollY + rect.top;
+      const blockBottom = window.scrollY + rect.bottom;
+      const vh = window.innerHeight;
+      lyricScrollStartY = Math.max(0, blockTop - vh * 0.25);
+      lyricScrollEndY   = Math.max(lyricScrollStartY, blockBottom - vh * 0.75);
+      if (lyricScrollEndY - lyricScrollStartY < 40) return;
+      lyricRangeReady = true;
+    }
+
+    function activeAnchorLineIdx(t, duration) {
+      const A = currentAnchors;
+      if (!A || !A.length) return -1;
+      if (t < A[0][0]) return -1;
+      let i = 0;
+      for (; i < A.length - 1; i++) {
+        if (t < A[i + 1][0]) break;
+      }
+      const [segT, segStart, segEnd] = A[i];
+      const segEndT = A[i + 1] ? A[i + 1][0] : (duration || segT + 30);
+      const span = segEnd - segStart;
+      if (span <= 0) return segStart;
+      const segProgress = Math.max(0, Math.min(1, (t - segT) / (segEndT - segT)));
+      return segStart + Math.min(span - 1, Math.floor(segProgress * span));
+    }
+
+    function lyricTick() {
+      requestAnimationFrame(lyricTick);
+      if (audio.paused || !audio.duration || !isFinite(audio.duration)) return;
+
+      if (currentAnchors) {
+        const idx = activeAnchorLineIdx(audio.currentTime, audio.duration);
+        if (idx !== lastActiveLineIdx) {
+          lastActiveLineIdx = idx;
+          lyricLineEls.forEach(el => el.classList.remove('active', 'near'));
+          const el = idx >= 0 ? lyricLineEls[idx] : null;
+          if (el) {
+            el.classList.add('active');
+            if (lyricLineEls[idx - 1]) lyricLineEls[idx - 1].classList.add('near');
+            if (lyricLineEls[idx + 1]) lyricLineEls[idx + 1].classList.add('near');
+            if (Date.now() > userScrollPauseUntil) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        }
+      } else {
+        if (!lyricRangeReady) return;
+        if (Date.now() < userScrollPauseUntil) return;
+        const progress = Math.max(0, Math.min(1, audio.currentTime / audio.duration));
+        const target   = lyricScrollStartY + progress * (lyricScrollEndY - lyricScrollStartY);
+        const current  = window.scrollY;
+        const delta    = target - current;
+        if (Math.abs(delta) > 0.4) {
+          window.scrollTo(0, current + delta * 0.06);
+        }
+      }
+    }
+    requestAnimationFrame(lyricTick);
+
+    // Real user input pauses auto-scroll briefly so they can read freely.
+    const pauseAutoScroll = () => { userScrollPauseUntil = Date.now() + 4000; };
+    ['wheel', 'touchstart', 'mousedown'].forEach(evt => {
+      window.addEventListener(evt, pauseAutoScroll, { passive: true });
+    });
+    window.addEventListener('keydown', e => {
+      if (['PageDown','PageUp','ArrowDown','ArrowUp','Home','End',' '].includes(e.key)) pauseAutoScroll();
+    });
+    window.addEventListener('resize', () => requestAnimationFrame(measureLyricScrollRange));
 
     function updateRowHighlight() {
       document.querySelectorAll('.track').forEach((row, i) => {
