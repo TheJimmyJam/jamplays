@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JamPlays — Watchlist</title>
+<meta name="description" content="A shared media checklist — search films & shows and track what to watch and download next." />
+<link rel="icon" type="image/png" href="../fantasyland-population-1/cover.png" />
+<style>
+  :root{
+    --bg:#0e0d0b;
+    --bg-2:#16140f;
+    --panel:#1c1a14;
+    --panel-2:#23201a;
+    --ink:#f4ecdb;
+    --ink-soft:#b8ad96;
+    --ink-faint:#7d745f;
+    --gold:#c9a35f;
+    --gold-deep:#a07d3c;
+    --line:rgba(201,163,95,0.22);
+    --want:#c9a35f;
+    --downloaded:#5fa3c9;
+    --watched:#7bbd6a;
+    --danger:#c96f5f;
+    --shadow:0 10px 30px rgba(0,0,0,0.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  body{background:
+    radial-gradient(circle at 20% -5%, rgba(201,163,95,0.10) 0%, transparent 45%),
+    radial-gradient(circle at 90% 0%, rgba(95,163,201,0.07) 0%, transparent 40%),
+    var(--bg);}
+  a{color:inherit}
+  .wrap{max-width:1160px;margin:0 auto;padding:28px 22px 90px}
+
+  /* Masthead */
+  .masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:26px;border-bottom:1px solid var(--line);padding-bottom:20px}
+  .brand h1{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:400;font-size:clamp(30px,5vw,46px);letter-spacing:.5px;line-height:1}
+  .brand .sub{font-size:11px;letter-spacing:3px;color:var(--gold);margin-top:8px;text-transform:uppercase}
+  .brand a.back{font-size:12px;color:var(--ink-faint);text-decoration:none;border-bottom:1px dotted transparent}
+  .brand a.back:hover{color:var(--gold);border-bottom-color:var(--gold)}
+  .whoami{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-soft)}
+  .whoami .label{letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-faint);font-size:10px}
+  .who-btn{background:transparent;border:1px solid var(--line);color:var(--ink-soft);padding:7px 14px;border-radius:999px;cursor:pointer;font-size:12px;transition:.15s}
+  .who-btn.active{background:var(--gold);border-color:var(--gold);color:#1a160d;font-weight:600}
+  .who-btn:hover{border-color:var(--gold)}
+
+  /* Search */
+  .searchbar{position:relative;margin-bottom:14px}
+  .searchbar input{
+    width:100%;background:var(--panel);border:1px solid var(--line);color:var(--ink);
+    font-size:16px;padding:16px 18px 16px 46px;border-radius:12px;outline:none;transition:.15s;
+  }
+  .searchbar input:focus{border-color:var(--gold);background:var(--panel-2)}
+  .searchbar input::placeholder{color:var(--ink-faint)}
+  .searchbar .mag{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:18px}
+  .searchbar .spin{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;display:none}
+  @keyframes sp{to{transform:translateY(-50%) rotate(360deg)}}
+
+  /* Section heading */
+  .sec-head{display:flex;align-items:center;gap:12px;margin:34px 0 16px}
+  .sec-head h2{font-family:Georgia,serif;font-style:italic;font-weight:400;font-size:22px}
+  .sec-head .count{font-size:12px;color:var(--ink-faint)}
+  .sec-head .hr{flex:1;height:1px;background:var(--line)}
+  .clear-search{background:transparent;border:1px solid var(--line);color:var(--ink-soft);padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer}
+  .clear-search:hover{border-color:var(--gold);color:var(--gold)}
+
+  /* Filter tabs */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+  .tab{background:var(--panel);border:1px solid var(--line);color:var(--ink-soft);padding:8px 15px;border-radius:999px;font-size:13px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:7px}
+  .tab .n{font-size:11px;color:var(--ink-faint);background:rgba(255,255,255,.05);padding:1px 7px;border-radius:999px}
+  .tab.active{background:var(--panel-2);border-color:var(--gold);color:var(--ink)}
+  .tab.active .n{color:var(--gold)}
+  .tab:hover{border-color:var(--gold)}
+
+  /* Grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+  .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--gold-deep)}
+  .poster{width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--panel-2);display:block}
+  .poster-fallback{width:100%;aspect-ratio:2/3;background:linear-gradient(160deg,var(--panel-2),#100f0b);display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;font-family:Georgia,serif;font-style:italic;color:var(--ink-faint);font-size:15px}
+  .card-body{padding:10px 12px 12px}
+  .card-title{font-size:13.5px;font-weight:600;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card-meta{font-size:11.5px;color:var(--ink-faint);margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .badge{font-size:10px;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:999px;font-weight:600}
+  .badge.type{background:rgba(255,255,255,.06);color:var(--ink-soft)}
+  .status-strip{position:absolute;top:10px;left:10px;display:flex;gap:6px}
+  .dot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 3px rgba(0,0,0,.35)}
+  .pill{position:absolute;top:10px;left:10px;font-size:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;padding:3px 9px;border-radius:999px;color:#14110a;backdrop-filter:blur(2px)}
+  .quick-add{position:absolute;bottom:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(20,17,10,.82);border:1px solid var(--gold);color:var(--gold);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;opacity:0;transition:.15s}
+  .card:hover .quick-add{opacity:1}
+  .quick-add:hover{background:var(--gold);color:#14110a}
+  .quick-add.added{background:var(--watched);border-color:var(--watched);color:#14110a;opacity:1}
+  .by-tag{position:absolute;bottom:10px;left:10px;font-size:10px;color:var(--ink-soft);background:rgba(20,17,10,.75);padding:2px 8px;border-radius:999px}
+
+  .empty{text-align:center;color:var(--ink-faint);padding:50px 20px;font-style:italic;font-family:Georgia,serif;border:1px dashed var(--line);border-radius:14px}
+
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(6,5,4,.78);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;padding:40px 18px;z-index:50;overflow-y:auto}
+  .overlay.open{display:flex}
+  .modal{position:relative;max-width:760px;width:100%;background:var(--bg-2);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);animation:pop .22s ease}
+  @keyframes pop{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+  .modal .hero{position:relative;min-height:200px;background-size:cover;background-position:center}
+  .modal .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--bg-2) 6%,rgba(22,20,15,.4) 60%,rgba(22,20,15,.15))}
+  .modal .close{position:absolute;top:14px;right:14px;z-index:3;width:36px;height:36px;border-radius:50%;background:rgba(10,9,7,.7);border:1px solid var(--line);color:var(--ink);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .modal .close:hover{border-color:var(--gold);color:var(--gold)}
+  .modal-body{position:relative;padding:0 26px 28px;margin-top:-90px;z-index:2}
+  .modal-top{display:flex;gap:20px;align-items:flex-end}
+  .modal-poster{width:130px;flex-shrink:0;border-radius:10px;box-shadow:var(--shadow);aspect-ratio:2/3;object-fit:cover;background:var(--panel-2)}
+  .modal-poster-fb{width:130px;flex-shrink:0;border-radius:10px;aspect-ratio:2/3;background:linear-gradient(160deg,var(--panel-2),#100f0b);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-family:Georgia,serif;font-style:italic;color:var(--ink-faint);font-size:14px}
+  .modal-head h3{font-family:Georgia,serif;font-weight:400;font-size:26px;line-height:1.15}
+  .modal-head .tagline{font-style:italic;color:var(--ink-soft);font-size:14px;margin-top:6px}
+  .factline{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-size:13px;color:var(--ink-soft);align-items:center}
+  .factline .star{color:var(--gold)}
+  .info-block{margin-top:22px}
+  .info-block .k{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+  .info-block .v{font-size:14.5px;color:var(--ink);line-height:1.6}
+  .overview{font-size:14.5px;color:var(--ink-soft);line-height:1.65;margin-top:8px}
+
+  .controls{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+  .ctl-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+  .ctl-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-faint);width:100%;margin-bottom:2px}
+  .status-btn{background:var(--panel);border:1px solid var(--line);color:var(--ink-soft);padding:9px 16px;border-radius:10px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;transition:.15s}
+  .status-btn:hover{border-color:var(--gold)}
+  .status-btn.active[data-s="want"]{background:rgba(201,163,95,.16);border-color:var(--want);color:var(--ink)}
+  .status-btn.active[data-s="downloaded"]{background:rgba(95,163,201,.16);border-color:var(--downloaded);color:var(--ink)}
+  .status-btn.active[data-s="watched"]{background:rgba(123,189,106,.16);border-color:var(--watched);color:var(--ink)}
+  .notes{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:12px;font-size:14px;font-family:inherit;resize:vertical;min-height:64px;outline:none}
+  .notes:focus{border-color:var(--gold)}
+  .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .btn{padding:11px 20px;border-radius:10px;font-size:13.5px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);transition:.15s;font-weight:500}
+  .btn.primary{background:var(--gold);border-color:var(--gold);color:#14110a;font-weight:600}
+  .btn.primary:hover{background:#d8b46d}
+  .btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .btn.danger{color:var(--danger);border-color:rgba(201,111,95,.4)}
+  .btn.danger:hover{background:rgba(201,111,95,.14)}
+
+  /* Toast */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel-2);border:1px solid var(--gold);color:var(--ink);padding:12px 22px;border-radius:12px;font-size:14px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:80}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .loading-state{text-align:center;color:var(--ink-faint);padding:40px;font-style:italic}
+
+  @media (max-width:560px){
+    .modal-top{flex-direction:column;align-items:flex-start}
+    .modal-poster,.modal-poster-fb{width:110px}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand">
+      <a class="back" href="../">← JamPlays</a>
+      <h1>The Watchlist</h1>
+      <div class="sub">Films &amp; Shows to Watch · Download · Keep</div>
+    </div>
+    <div class="whoami">
+      <span class="label">You are</span>
+      <button class="who-btn" data-who="Jimmy">Jimmy</button>
+      <button class="who-btn" data-who="Jamie">Jamie</button>
+    </div>
+  </header>
+
+  <div class="searchbar">
+    <span class="mag">⌕</span>
+    <input id="search" type="text" placeholder="Search a movie or TV show to add…" autocomplete="off" />
+    <span class="spin" id="searchSpin"></span>
+  </div>
+
+  <!-- Search results -->
+  <section id="searchSection" style="display:none">
+    <div class="sec-head">
+      <h2>Search results</h2>
+      <span class="count" id="searchCount"></span>
+      <span class="hr"></span>
+      <button class="clear-search" id="clearSearch">Clear</button>
+    </div>
+    <div class="grid" id="searchGrid"></div>
+  </section>
+
+  <!-- The list -->
+  <section id="listSection">
+    <div class="sec-head">
+      <h2>Our Collection</h2>
+      <span class="hr"></span>
+    </div>
+    <div class="filters" id="filters">
+      <button class="tab active" data-f="all">All <span class="n" id="c-all">0</span></button>
+      <button class="tab" data-f="want"><span class="dot" style="background:var(--want)"></span>Want to Watch <span class="n" id="c-want">0</span></button>
+      <button class="tab" data-f="downloaded"><span class="dot" style="background:var(--downloaded)"></span>Downloaded <span class="n" id="c-downloaded">0</span></button>
+      <button class="tab" data-f="watched"><span class="dot" style="background:var(--watched)"></span>Watched <span class="n" id="c-watched">0</span></button>
+      <button class="tab" data-f="movie">Movies <span class="n" id="c-movie">0</span></button>
+      <button class="tab" data-f="tv">TV <span class="n" id="c-tv">0</span></button>
+    </div>
+    <div class="grid" id="listGrid"></div>
+    <div class="empty" id="listEmpty" style="display:none">Nothing here yet — search above to add your first title.</div>
+    <div class="loading-state" id="listLoading">Loading the collection…</div>
+  </section>
+</div>
+
+<!-- Detail modal -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://azkyohtmhlvnkziuvgvk.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6a3lvaHRtaGx2bmt6aXV2Z3ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyNTQxMTQsImV4cCI6MjA5MjgzMDExNH0.BTN2ByDMpgmv5cn1e4--cfYLFUCS23ZnOYaz4gf8qLM";
+const TABLE = "jamplays_watchlist";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let LIST = [];          // current watchlist rows
+let SEARCH = [];        // current search results
+let filter = "all";
+let who = localStorage.getItem("jp_who") || "Jimmy";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => (s == null ? "" : String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])));
+
+/* ---------- Toast ---------- */
+let toastT;
+function toast(msg){
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+/* ---------- Who am I ---------- */
+function renderWho(){
+  document.querySelectorAll(".who-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.who === who);
+  });
+}
+document.querySelectorAll(".who-btn").forEach(b=>{
+  b.onclick = ()=>{ who = b.dataset.who; localStorage.setItem("jp_who", who); renderWho(); };
+});
+
+/* ---------- Supabase data ---------- */
+async function loadList(){
+  const { data, error } = await sb.from(TABLE).select("*").order("created_at", { ascending:false });
+  $("listLoading").style.display = "none";
+  if(error){ toast("Couldn't load list"); console.error(error); return; }
+  LIST = data || [];
+  renderList();
+}
+
+function onList(tmdb_id, media_type){
+  return LIST.find(x => x.tmdb_id === tmdb_id && x.media_type === media_type);
+}
+
+async function addItem(details){
+  const row = {
+    tmdb_id: details.tmdb_id,
+    media_type: details.media_type,
+    title: details.title,
+    year: details.year,
+    release_date: details.release_date,
+    poster_url: details.poster_url,
+    backdrop_url: details.backdrop_url,
+    overview: details.overview,
+    director: details.director,
+    top_cast: details.top_cast,
+    genres: details.genres,
+    rating: details.rating,
+    runtime: details.runtime,
+    status: "want",
+    added_by: who,
+    notes: ""
+  };
+  const { data, error } = await sb.from(TABLE).upsert(row, { onConflict:"tmdb_id,media_type", ignoreDuplicates:true }).select();
+  if(error){ toast("Couldn't add"); console.error(error); return null; }
+  await loadList();
+  toast(`Added “${details.title}”`);
+  return (data && data[0]) || onList(details.tmdb_id, details.media_type);
+}
+
+async function updateItem(id, patch){
+  const { error } = await sb.from(TABLE).update(patch).eq("id", id);
+  if(error){ toast("Update failed"); console.error(error); return; }
+  await loadList();
+}
+
+async function removeItem(id){
+  const { error } = await sb.from(TABLE).delete().eq("id", id);
+  if(error){ toast("Delete failed"); console.error(error); return; }
+  await loadList();
+  toast("Removed");
+}
+
+/* ---------- TMDB search ---------- */
+let searchTimer;
+$("search").addEventListener("input", e=>{
+  clearTimeout(searchTimer);
+  const q = e.target.value.trim();
+  if(!q){ $("searchSection").style.display="none"; SEARCH=[]; return; }
+  searchTimer = setTimeout(()=>doSearch(q), 350);
+});
+async function doSearch(q){
+  $("searchSpin").style.display="block";
+  try{
+    const res = await fetch(`/.netlify/functions/tmdb?action=search&query=${encodeURIComponent(q)}`);
+    const data = await res.json();
+    SEARCH = data.results || [];
+    renderSearch();
+  }catch(err){ toast("Search failed"); console.error(err); }
+  finally{ $("searchSpin").style.display="none"; }
+}
+$("clearSearch").onclick = ()=>{ $("search").value=""; $("searchSection").style.display="none"; SEARCH=[]; };
+
+/* ---------- Rendering ---------- */
+function posterEl(url, title){
+  return url
+    ? `<img class="poster" loading="lazy" src="${esc(url)}" alt="${esc(title)}" onerror="this.outerHTML='<div class=&quot;poster-fallback&quot;>${esc(title).replace(/'/g,"")}</div>'">`
+    : `<div class="poster-fallback">${esc(title)}</div>`;
+}
+const typeLabel = (t)=> t==="tv" ? "TV" : "Film";
+const statusColor = { want:"var(--want)", downloaded:"var(--downloaded)", watched:"var(--watched)" };
+const statusLabel = { want:"Want", downloaded:"Got it", watched:"Watched" };
+
+function renderSearch(){
+  const sec = $("searchSection"), grid = $("searchGrid");
+  sec.style.display = "block";
+  $("searchCount").textContent = SEARCH.length ? `${SEARCH.length} found` : "";
+  if(!SEARCH.length){ grid.innerHTML = `<div class="empty" style="grid-column:1/-1">No matches. Try another title.</div>`; return; }
+  grid.innerHTML = SEARCH.map((r,i)=>{
+    const existing = onList(r.tmdb_id, r.media_type);
+    return `<div class="card" data-search="${i}">
+      ${posterEl(r.poster_url, r.title)}
+      <button class="quick-add ${existing?'added':''}" data-qa="${i}" title="${existing?'Already on your list':'Add to list'}">${existing?'✓':'+'}</button>
+      <div class="card-body">
+        <div class="card-title">${esc(r.title)}</div>
+        <div class="card-meta"><span class="badge type">${typeLabel(r.media_type)}</span>${r.year?esc(r.year):''}${r.rating?` · ★ ${r.rating}`:''}</div>
+      </div>
+    </div>`;
+  }).join("");
+  grid.querySelectorAll("[data-search]").forEach(el=>{
+    el.addEventListener("click", e=>{
+      if(e.target.closest("[data-qa]")) return;
+      openDetail(SEARCH[+el.dataset.search]);
+    });
+  });
+  grid.querySelectorAll("[data-qa]").forEach(btn=>{
+    btn.addEventListener("click", async e=>{
+      e.stopPropagation();
+      const r = SEARCH[+btn.dataset.qa];
+      if(onList(r.tmdb_id, r.media_type)){ toast("Already on your list"); return; }
+      btn.textContent="…";
+      const details = await fetchDetails(r);
+      await addItem(details);
+      btn.textContent="✓"; btn.classList.add("added");
+    });
+  });
+}
+
+function filteredList(){
+  if(filter==="all") return LIST;
+  if(filter==="movie") return LIST.filter(x=>x.media_type==="movie");
+  if(filter==="tv") return LIST.filter(x=>x.media_type==="tv");
+  return LIST.filter(x=>x.status===filter);
+}
+
+function renderList(){
+  // counts
+  $("c-all").textContent = LIST.length;
+  $("c-want").textContent = LIST.filter(x=>x.status==="want").length;
+  $("c-downloaded").textContent = LIST.filter(x=>x.status==="downloaded").length;
+  $("c-watched").textContent = LIST.filter(x=>x.status==="watched").length;
+  $("c-movie").textContent = LIST.filter(x=>x.media_type==="movie").length;
+  $("c-tv").textContent = LIST.filter(x=>x.media_type==="tv").length;
+
+  const grid = $("listGrid"), rows = filteredList();
+  $("listEmpty").style.display = LIST.length ? "none" : "block";
+  if(LIST.length && !rows.length){
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">Nothing in this filter.</div>`; return;
+  }
+  grid.innerHTML = rows.map((r,i)=>`
+    <div class="card" data-list="${r.id}">
+      <span class="pill" style="background:${statusColor[r.status]}">${statusLabel[r.status]}</span>
+      ${posterEl(r.poster_url, r.title)}
+      ${r.added_by?`<span class="by-tag">${esc(r.added_by)}</span>`:''}
+      <div class="card-body">
+        <div class="card-title">${esc(r.title)}</div>
+        <div class="card-meta"><span class="badge type">${typeLabel(r.media_type)}</span>${r.year?esc(r.year):''}${r.rating?` · ★ ${r.rating}`:''}</div>
+      </div>
+    </div>`).join("");
+  grid.querySelectorAll("[data-list]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const row = LIST.find(x=>x.id===el.dataset.list);
+      openDetail(row, true);
+    });
+  });
+}
+
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active"); filter = t.dataset.f; renderList();
+  };
+});
+
+/* ---------- Detail modal ---------- */
+async function fetchDetails(r){
+  try{
+    const res = await fetch(`/.netlify/functions/tmdb?action=details&type=${r.media_type}&id=${r.tmdb_id}`);
+    const d = await res.json();
+    if(d.error) throw new Error(d.error);
+    return d;
+  }catch(err){
+    // fall back to the search-level data we already have
+    return { ...r, director:"—", top_cast:"", genres:"", runtime:"", backdrop_url:null, release_date:"" };
+  }
+}
+
+async function openDetail(item, isOnList){
+  const overlay = $("overlay"), modal = $("modal");
+  overlay.classList.add("open");
+  document.body.style.overflow="hidden";
+  modal.innerHTML = `<div class="loading-state" style="padding:80px">Loading details…</div>`;
+
+  // If it's already a saved row we have full data; otherwise fetch from TMDB
+  let d = item;
+  if(!isOnList){ d = await fetchDetails(item); }
+  const row = onList(d.tmdb_id, d.media_type);   // saved row if exists
+  const onlist = !!row;
+  const cur = row || d;
+
+  const hero = (cur.backdrop_url || cur.poster_url)
+    ? `style="background-image:url('${esc(cur.backdrop_url || cur.poster_url)}')"` : "";
+  const poster = cur.poster_url
+    ? `<img class="modal-poster" src="${esc(cur.poster_url)}" alt="">`
+    : `<div class="modal-poster-fb">${esc(cur.title)}</div>`;
+
+  const facts = [
+    cur.year ? esc(cur.year) : "",
+    typeLabel(cur.media_type),
+    cur.runtime ? esc(cur.runtime) : "",
+    cur.rating ? `<span class="star">★ ${cur.rating}</span>` : ""
+  ].filter(Boolean).join(" &nbsp;·&nbsp; ");
+
+  modal.innerHTML = `
+    <button class="close" id="mClose">✕</button>
+    <div class="hero" ${hero}></div>
+    <div class="modal-body">
+      <div class="modal-top">
+        ${poster}
+        <div class="modal-head">
+          <h3>${esc(cur.title)}</h3>
+          ${cur.tagline?`<div class="tagline">${esc(cur.tagline)}</div>`:""}
+          <div class="factline">${facts}</div>
+        </div>
+      </div>
+
+      ${cur.director && cur.director!=="—" ? `<div class="info-block"><div class="k">${cur.media_type==="tv"?"Created by":"Director"}</div><div class="v">${esc(cur.director)}</div></div>`:""}
+      ${cur.top_cast ? `<div class="info-block"><div class="k">Starring</div><div class="v">${esc(cur.top_cast)}</div></div>`:""}
+      ${cur.genres ? `<div class="info-block"><div class="k">Genre</div><div class="v">${esc(cur.genres)}</div></div>`:""}
+      ${cur.overview ? `<div class="info-block"><div class="k">Synopsis</div><div class="overview">${esc(cur.overview)}</div></div>`:""}
+
+      <div class="controls">
+        ${onlist ? `
+          <div class="ctl-row">
+            <span class="ctl-label">Status</span>
+            ${["want","downloaded","watched"].map(s=>`
+              <button class="status-btn ${row.status===s?'active':''}" data-s="${s}">
+                <span class="dot" style="background:${statusColor[s]}"></span>${s==="want"?"Want to Watch":s==="downloaded"?"Downloaded":"Watched"}
+              </button>`).join("")}
+          </div>
+          <div class="ctl-row" style="flex-direction:column;align-items:stretch">
+            <span class="ctl-label">Notes ${row.added_by?`· added by ${esc(row.added_by)}`:""}</span>
+            <textarea class="notes" id="mNotes" placeholder="Where to download, why you picked it, who recommended it…">${esc(row.notes||"")}</textarea>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="mSaveNotes">Save notes</button>
+            <button class="btn danger" id="mRemove">Remove from list</button>
+          </div>
+        ` : `
+          <div class="actions">
+            <button class="btn primary" id="mAdd">+ Add to our list</button>
+          </div>
+        `}
+      </div>
+    </div>`;
+
+  $("mClose").onclick = closeModal;
+
+  if(onlist){
+    modal.querySelectorAll(".status-btn").forEach(b=>{
+      b.onclick = async ()=>{
+        await updateItem(row.id, { status:b.dataset.s });
+        const fresh = onList(cur.tmdb_id, cur.media_type);
+        openDetail(fresh, true);
+        toast(`Marked “${cur.title}” as ${b.dataset.s==="want"?"want to watch":b.dataset.s}`);
+      };
+    });
+    $("mSaveNotes").onclick = async ()=>{
+      await updateItem(row.id, { notes: $("mNotes").value });
+      toast("Notes saved");
+    };
+    $("mRemove").onclick = async ()=>{
+      await removeItem(row.id); closeModal();
+    };
+  } else {
+    $("mAdd").onclick = async ()=>{
+      $("mAdd").textContent="Adding…";
+      await addItem(cur);
+      const fresh = onList(cur.tmdb_id, cur.media_type);
+      openDetail(fresh, true);
+    };
+  }
+}
+function closeModal(){
+  $("overlay").classList.remove("open");
+  document.body.style.overflow="";
+  renderSearch && SEARCH.length && renderSearch();
+}
+$("overlay").addEventListener("click", e=>{ if(e.target===$("overlay")) closeModal(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && $("overlay").classList.contains("open")) closeModal(); });
+
+/* ---------- Init + live-ish refresh ---------- */
+renderWho();
+loadList();
+window.addEventListener("focus", loadList);
+setInterval(()=>{ if(!$("overlay").classList.contains("open")) loadList(); }, 30000);
+</script>
+</body>
+</html>
