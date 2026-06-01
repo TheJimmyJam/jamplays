@@ -52,9 +52,9 @@ exports.handler = async (event) => {
           year: year(r.release_date || r.first_air_date),
           poster_url: poster(r.poster_path),
           rating: r.vote_average ? Math.round(r.vote_average * 10) / 10 : null,
+          popularity: r.popularity || 0,
           overview: r.overview || "",
-        }))
-        .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        }));
       return json({ results });
     }
 
